@@ -10,7 +10,7 @@ This portfolio documents four digital systems design projects, including design,
 
 <h3> Project 1 – Car Seat Belt Warning Light 🚗</h3>
    
-  #### Introduction: idea and objectives
+  #### Introduction
   
   **Idea**: A digital control circuit that turns on a car’s seat-belt warning light (L) based on four sensor inputs. A sensor sets its output to 1 when its condition is true; for example, the pressure sensor outputs 1 when someone is in the seat.
   
@@ -28,7 +28,7 @@ This portfolio documents four digital systems design projects, including design,
   3. Challenge: extend the design so a 2-bit STATUS output tells apart a door warning and a seat-belt warning. (Part III)
   
   
-  **Design: Explanation of design and labelled block diagram**
+  #### Design
 
 Truth Table
 
@@ -55,8 +55,14 @@ Boolean Simplification
 
 
 `L = D'K + KPS' = K(D' + PS')`
+
   
-  **Code: Dexplanation of code blocks or sections (key parts), Link to the design source, testbench and relevant XDC**
+  #### Code
+  
+
+**VHDL**
+
+
 ```
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -91,24 +97,103 @@ begin
               "00";
 end Behavioral;
 ```
+
+
+**Testbench**
+
+
+```
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity car_warnlight_tb is
+end car_warnlight_tb;
+
+architecture behavior of car_warnlight_tb is
+    component car_warnlight
+    Port ( D : in STD_LOGIC;
+           K : in STD_LOGIC;
+           P : in STD_LOGIC;
+           S : in STD_LOGIC;
+           W : out STD_LOGIC;
+           STATUS : out STD_LOGIC_VECTOR (1 downto 0));
+    end component;
+
+    signal D : STD_LOGIC := '0';
+    signal K : STD_LOGIC := '0';
+    signal P : STD_LOGIC := '0';
+    signal S : STD_LOGIC := '0';
+    signal W : STD_LOGIC;
+    signal STATUS : STD_LOGIC_VECTOR (1 downto 0);
+begin
+    uut: car_warnlight port map (
+          D => D,
+          K => K,
+          P => P,
+          S => S,
+          W => W,
+          STATUS => STATUS
+        );
+
+    stim_proc: process
+    begin
+        -- Test Case 1: No warning (Key out)
+        D <= '1'; K <= '0'; P <= '0'; S <= '0';
+        wait for 20 ns;
+        
+        -- Test Case 2: Door warning only (Key in, Door open, No person)
+        D <= '0'; K <= '1'; P <= '0'; S <= '0';
+        wait for 20 ns;
+
+        -- Test Case 3: Seat-belt warning only (Key in, Door closed, Person seated, Belt off)
+        D <= '1'; K <= '1'; P <= '1'; S <= '0';
+        wait for 20 ns;
+
+        -- Test Case 4: Both warnings (Key in, Door open, Person seated, Belt off)
+        D <= '0'; K <= '1'; P <= '1'; S <= '0';
+        wait for 20 ns;
+        
+        -- Test Case 5: No warning (Key in, Door closed, Person seated, Belt fastened)
+        D <= '1'; K <= '1'; P <= '1'; S <= '1';
+        wait for 20 ns;
+
+        wait;
+    end process;
+end behavior;
+```
   
   **Simulation: Waveforms for all required scenarios and analysis of expected vs. observed results**
+  
+  
+Simulation Waveform
+  <img width="975" height="383" alt="image" src="https://github.com/user-attachments/assets/b2333f11-ed63-4c3c-b1d4-46d9beab52c9" />
+
+  
+
+#### Hardware: Elaborated and synthesized schematics, implementation, utilization and Basys3 behaviour
+
+
 
 Elaborated Design 
   <img width="975" height="270" alt="image" src="https://github.com/user-attachments/assets/cdd4d2db-ac1b-435b-91f9-7e99d0630775" />
-Simulation Waveform
-  <img width="975" height="383" alt="image" src="https://github.com/user-attachments/assets/b2333f11-ed63-4c3c-b1d4-46d9beab52c9" />
+
 Synthesized Design
   <img width="975" height="459" alt="image" src="https://github.com/user-attachments/assets/9ecd0e24-f69f-48cd-a855-a1f83630035e" />
+
+  
 Implemented Design
   <img width="975" height="486" alt="image" src="https://github.com/user-attachments/assets/c2ad4230-cf33-4320-b67a-cdadadb707a5" />
+
+  
 Utilization report
+
+
   <img width="758" height="181" alt="image" src="https://github.com/user-attachments/assets/103d03f8-584f-48cf-aad6-ceec00071bc5" />
 
 
 
-  Hardware: Elaborated and synthesized schematics, implementation, utilization and Basys3 behaviour
-  Reflection: Challenges/resolutions and learning linked to theory
+
+#### Reflection: Challenges/resolutions and learning linked to theory
 
 
 2. [Project 2 — Add title](projects/project2.html)
