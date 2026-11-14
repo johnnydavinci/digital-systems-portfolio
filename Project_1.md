@@ -230,7 +230,7 @@ The testbench applies five input combinations, holding each for 20 ns. The STATU
 **RTL_EQ** comparators and two **RTL_MUX** blocks form the when…else statement. The comparators check each condition, and the multiplexers select “11”, “10”, “01” or “00” for **STATUS[1:0]**, in priority order.
 
 
-Synthesized Design
+**Synthesized Design**
 
 
   <img width="975" height="459" alt="image" src="https://github.com/user-attachments/assets/9ecd0e24-f69f-48cd-a855-a1f83630035e" />
@@ -275,4 +275,18 @@ The 7 IOBs match the 7 ports (4 switches + 3 LEDs). The schematic shows 3 LUTs, 
 
 
 ## Reflection: Challenges/resolutions and learning linked to theory
+
+
+**Challenges and resolutions**
+
+- **Matching port names in the XDC:** The master Basys3 XDC uses generic names like `sw[0]` and `led[0]`. These had to be renamed to match the entity ports (D, K, P, S, W, STATUS), or the implementation would fail. Uncommenting only the used pins solved this.
+- **STATUS priority:** In the `when…else` statement, the "11" (both warnings) case had to be checked first. Otherwise one of the single-warning cases would match first and the output would be wrong.
+- **Reading the waveform:** Vivado showed STATUS as a decimal number (0–3) instead of binary. Converting it back to binary (00, 01, 10, 11) made it easy to compare with the truth table.
+
+**Learning linked to theory**
+
+- **Boolean algebra and K-maps:** The 5 minterms Σm(4, 5, 6, 7, 14) reduced to just two terms, `L = D'K + KPS'`. This showed how a K-map simplifies logic and reduces the number of gates.
+- **Discrete logic vs. programmable logic:** In Part I the circuit needed separate gate ICs. On the FPGA, synthesis packed the whole design into only 2 LUTs, because a LUT can implement any Boolean function of its inputs.
+- **Elaborated vs. synthesized design:** The elaborated schematic showed comparators and multiplexers taken directly from the VHDL. Synthesis then optimized them into LUTs. This showed that how the HDL is written is not the same as the final hardware.
+- **Verification flow:** Simulating with a testbench before programming the board caught any errors early. The Basys3 then behaved exactly as the simulation predicted.
 
