@@ -5,7 +5,7 @@
 
 This portfolio documents four digital systems design projects, including design, VHDL source code, simulation verification, FPGA implementation and reflection.
 
-## Project Reports
+<h2 align="center">Project Reports </h2>
 
 ### Project 1 – Car Seat Belt Warning Light
    
