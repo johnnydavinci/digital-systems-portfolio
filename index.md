@@ -1,6 +1,6 @@
 <h1 align="center">Digital Systems Design Portfolio</h1>
 
-**Name:** Quang Nguyen 
+**Name:** Quang Nguyen /n
 **Course/Section:** Adv Digital & Embedded Systems - ELIC-329-0NA
 
 This portfolio documents four digital systems design projects, including design, VHDL source code, simulation verification, FPGA implementation and reflection.
