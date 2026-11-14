@@ -1,6 +1,6 @@
 <h1 align="center">💻Project Reports💻</h1>
 
-<h2> Project 1 – Car Seat Belt Warning Light 🚗</h2>
+<h2 align="center"> Project 1 – Car Seat Belt Warning Light 🚗</h2>
    
   #### Introduction
   
