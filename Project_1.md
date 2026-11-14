@@ -15,7 +15,7 @@
 | W (output) | warning light is ON | LED0 / U16 |
 | STATUS[1:0] | warning type | LED2 / U19, LED1 / E19 |
   
-  **Objectives** (from the handout):
+  **Objectives**
   
   1. Design the circuit the traditional way: truth table, K-map and Boolean simplification. (Part I)
   2. Implement the same circuit on the Basys3 FPGA (Artix-7 xc7a35tcpg236-1) through the Vivado flow: design entry, simulation, synthesis,              implementation, bitstream and programming. (Part II)
@@ -24,18 +24,42 @@
   
   #### Design
 
+
+Simple block diagram
+
+
+```
+
+Switches (D, K, P, S) → car_warnlight logic (FPGA) → LEDs (W, STATUS[1:0])
+
+```
+
+
 Truth Table
 
 
-| D | K | P | S | Minterm |
-|---|---|---|---|---------|
-| 0 | 1 | 0 | 0 | 4 |
-| 0 | 1 | 0 | 1 | 5 |
-| 0 | 1 | 1 | 0 | 6 |
-| 0 | 1 | 1 | 1 | 7 |
-| 1 | 1 | 1 | 0 | 14 |
+
+| m | D | K | P | S | W | STATUS | Meaning |
+|---|---|---|---|---|---|---|---|
+| 0–3 | 0 | 0 | x | x | 0 | 00 | No warning (key out) |
+| 4 | 0 | 1 | 0 | 0 | 1 | 01 | Door warning |
+| 5 | 0 | 1 | 0 | 1 | 1 | 01 | Door warning |
+| 6 | 0 | 1 | 1 | 0 | 1 | 11 | Both warnings |
+| 7 | 0 | 1 | 1 | 1 | 1 | 01 | Door warning |
+| 8–11 | 1 | 0 | x | x | 0 | 00 | No warning (key out) |
+| 12 | 1 | 1 | 0 | 0 | 0 | 00 | No warning |
+| 13 | 1 | 1 | 0 | 1 | 0 | 00 | No warning |
+| 14 | 1 | 1 | 1 | 0 | 1 | 10 | Seat-belt warning |
+| 15 | 1 | 1 | 1 | 1 | 0 | 00 | No warning |
+
+**W = Σm(4, 5, 6, 7, 14)**
+
+
+
 
 K-map
+
+
 
 
 | DK \ PS | 00 | 01 | 11 | 10 |
@@ -44,6 +68,9 @@ K-map
 | **01**  | 1  | 1  | 1  | 1  |
 | **11**  | 0  | 0  | 0  | 1  |
 | **10**  | 0  | 0  | 0  | 0  |
+
+
+
 
 Boolean Simplification
 
