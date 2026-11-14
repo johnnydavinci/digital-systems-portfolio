@@ -7,9 +7,9 @@ This portfolio documents four digital systems design projects, including design,
 
 ## Project Reports
 
-**1. Project 1 — Car seat belt warning light**
+### Project 1 – Car Seat Belt Warning Light
    
-  **Introduction: idea and objectives**
+  ####Introduction: idea and objectives
   
   Idea: A digital control circuit that turns on a car’s seat-belt warning light (L) based on four sensor inputs. A sensor sets its output to 1 when     its condition is true; for example, the pressure sensor outputs 1 when someone is in the seat.
   
