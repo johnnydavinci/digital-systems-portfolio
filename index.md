@@ -57,7 +57,40 @@ Boolean Simplification
 `L = D'K + KPS' = K(D' + PS')`
   
   **Code: Dexplanation of code blocks or sections (key parts), Link to the design source, testbench and relevant XDC**
+```
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 
+entity car_warnlight is
+    Port ( D      : in STD_LOGIC;  -- Door closed
+           K      : in STD_LOGIC;  -- Key in
+           P      : in STD_LOGIC;  -- Person on seat
+           S      : in STD_LOGIC;  -- Seat belt fastened
+           W      : out STD_LOGIC; -- Warning Light
+           STATUS : out STD_LOGIC_VECTOR (1 downto 0)); -- Warning Status
+end car_warnlight;
+
+architecture Behavioral of car_warnlight is
+    -- Internal signals for specific warning conditions
+    signal door_warning : STD_LOGIC;
+    signal belt_warning : STD_LOGIC;
+begin
+    -- The key is in and the door is open
+    door_warning <= K and not D;
+    
+    -- The key is in, a person is seated, and the belt is not fastened
+    belt_warning <= K and P and not S;
+
+    -- The warning light W turns ON whenever either warning is active
+    W <= door_warning or belt_warning;
+
+    -- Conditional signal assignment to generate the four STATUS values
+    STATUS <= "11" when (door_warning = '1' and belt_warning = '1') else
+              "10" when (door_warning = '0' and belt_warning = '1') else
+              "01" when (door_warning = '1' and belt_warning = '0') else
+              "00";
+end Behavioral;
+```
   
   **Simulation: Waveforms for all required scenarios and analysis of expected vs. observed results**
 
