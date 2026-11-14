@@ -7,7 +7,7 @@ This portfolio documents four digital systems design projects, including design,
 
 ## Project Reports
 
-1. [Project 1 — Car seat belt warning light](projects/project1.html)
+**1. Project 1 — Car seat belt warning light**
    
   **Introduction: idea and objectives**
   
@@ -41,15 +41,16 @@ Truth Table
 
 K-map
 
-        PS: 00  01  11  10
-DK=00        0   0   0   0
-DK=01        1   1   1   1  
-DK=11        0   0   0   1   
-DK=10        0   0   0   0
+| DK \ PS | 00 | 01 | 11 | 10 |
+|---------|----|----|----|----|
+| **00**  | 0  | 0  | 0  | 0  |
+| **01**  | 1  | 1  | 1  | 1  |
+| **11**  | 0  | 0  | 0  | 1  |
+| **10**  | 0  | 0  | 0  | 0  |
 
-Boolean Sumplification
+Boolean Simplification
 
-L = D’K + KPS’ = K(D’ + PS’)
+`L = D'K + KPS' = K(D' + PS')`
   
   **Code: Dexplanation of code blocks or sections (key parts), Link to the design source, testbench and relevant XDC**
 
