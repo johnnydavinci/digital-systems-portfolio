@@ -12,7 +12,7 @@ This portfolio documents four digital systems design projects, including design,
    
   #### Introduction: idea and objectives
   
-  Idea: A digital control circuit that turns on a car’s seat-belt warning light (L) based on four sensor inputs. A sensor sets its output to 1 when     its condition is true; for example, the pressure sensor outputs 1 when someone is in the seat.
+  **Idea**: A digital control circuit that turns on a car’s seat-belt warning light (L) based on four sensor inputs. A sensor sets its output to 1 when its condition is true; for example, the pressure sensor outputs 1 when someone is in the seat.
   
   Input	= 1 when…	Basys3 switch / pin
   D (door_closed)	door is closed	SW0 / V17
@@ -21,7 +21,7 @@ This portfolio documents four digital systems design projects, including design,
   S (seat_belt)	seat belt is fastened	SW3 / W17
   L (output)	warning light is ON	LED0 / U16
   
-  Objectives (from the handout):
+  **Objectives** (from the handout):
   
   1. Design the circuit the traditional way: truth table, K-map and Boolean simplification. (Part I)
   2. Implement the same circuit on the Basys3 FPGA (Artix-7 xc7a35tcpg236-1) through the Vivado flow: design entry, simulation, synthesis,              implementation, bitstream and programming. (Part II)
@@ -31,6 +31,7 @@ This portfolio documents four digital systems design projects, including design,
   **Design: Explanation of design and labelled block diagram**
 
 Truth Table
+
 
 | D | K | P | S | Minterm |
 |---|---|---|---|---------|
@@ -42,6 +43,7 @@ Truth Table
 
 K-map
 
+
 | DK \ PS | 00 | 01 | 11 | 10 |
 |---------|----|----|----|----|
 | **00**  | 0  | 0  | 0  | 0  |
@@ -50,6 +52,7 @@ K-map
 | **10**  | 0  | 0  | 0  | 0  |
 
 Boolean Simplification
+
 
 `L = D'K + KPS' = K(D' + PS')`
   
