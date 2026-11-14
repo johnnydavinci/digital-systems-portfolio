@@ -1,14 +1,6 @@
-<h1 align="center">💡Digital Systems Design Portfolio💡</h1>
+<h1 align="center">💻Project Reports💻</h1>
 
-**Name:** Quang Nguyen 
-
-**Course/Section:** Adv Digital & Embedded Systems - ELIC-329-0NA
-
-This portfolio documents four digital systems design projects, including design, VHDL source code, simulation verification, FPGA implementation and reflection.
-
-<h2 align="center">💻Project Reports💻</h2>
-
-<h3> Project 1 – Car Seat Belt Warning Light 🚗</h3>
+<h2> Project 1 – Car Seat Belt Warning Light 🚗</h2>
    
   #### Introduction
   
