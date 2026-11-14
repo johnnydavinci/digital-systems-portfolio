@@ -14,12 +14,14 @@ This portfolio documents four digital systems design projects, including design,
   
   **Idea**: A digital control circuit that turns on a car’s seat-belt warning light (L) based on four sensor inputs. A sensor sets its output to 1 when its condition is true; for example, the pressure sensor outputs 1 when someone is in the seat.
   
-  Input	= 1 when…	Basys3 switch / pin
-  D (door_closed)	door is closed	SW0 / V17
-  K (key_in)	key is in the ignition	SW1 / V16
-  P (seat_pressure)	a person is in the seat	SW2 / W16
-  S (seat_belt)	seat belt is fastened	SW3 / W17
-  L (output)	warning light is ON	LED0 / U16
+| Input | = 1 when… | Basys3 switch / pin |
+|---|---|---|
+| D (door_closed) | door is closed | SW0 / V17 |
+| K (key_in) | key is in the ignition | SW1 / V16 |
+| P (seat_pressure) | a person is in the seat | SW2 / W16 |
+| S (seat_belt) | seat belt is fastened | SW3 / W17 |
+| W (output) | warning light is ON | LED0 / U16 |
+| STATUS[1:0] | warning type | LED2 / U19, LED1 / E19 |
   
   **Objectives** (from the handout):
   
@@ -161,6 +163,30 @@ begin
     end process;
 end behavior;
 ```
+
+**Contrast** 
+
+```
+tcl
+## Switches (inputs)
+set_property PACKAGE_PIN V17 [get_ports D]
+set_property PACKAGE_PIN V16 [get_ports K]
+set_property PACKAGE_PIN W16 [get_ports P]
+set_property PACKAGE_PIN W17 [get_ports S]
+
+## LEDs (outputs)
+set_property PACKAGE_PIN U16 [get_ports W]
+set_property PACKAGE_PIN E19 [get_ports {STATUS[0]}]
+set_property PACKAGE_PIN U19 [get_ports {STATUS[1]}]
+
+## I/O standard for all used ports
+set_property IOSTANDARD LVCMOS33 [get_ports {D K P S W STATUS[*]}]
+
+## Configuration
+set_property CONFIG_VOLTAGE 3.3 [current_design]
+set_property CFGBVS VCCO [current_design]
+
+```
   
   **Simulation: Waveforms for all required scenarios and analysis of expected vs. observed results**
   
@@ -175,13 +201,19 @@ Simulation Waveform
 
 
 Elaborated Design 
+
+
   <img width="975" height="270" alt="image" src="https://github.com/user-attachments/assets/cdd4d2db-ac1b-435b-91f9-7e99d0630775" />
 
 Synthesized Design
+
+
   <img width="975" height="459" alt="image" src="https://github.com/user-attachments/assets/9ecd0e24-f69f-48cd-a855-a1f83630035e" />
 
   
 Implemented Design
+
+
   <img width="975" height="486" alt="image" src="https://github.com/user-attachments/assets/c2ad4230-cf33-4320-b67a-cdadadb707a5" />
 
   
@@ -192,8 +224,9 @@ Utilization report
 
 
 
-
 #### Reflection: Challenges/resolutions and learning linked to theory
+
+
 
 
 2. [Project 2 — Add title](projects/project2.html)
