@@ -31,12 +31,13 @@ This portfolio documents four digital systems design projects, including design,
 
 Truth Table
 
-D	K	P	S	Minterm
-0	1	0	0	4
-0	1	0	1	5
-0	1	1	0	6
-0	1	1	1	7
-1	1	1	0	14
+| D | K | P | S | Minterm |
+|---|---|---|---|---------|
+| 0 | 1 | 0 | 0 | 4 |
+| 0 | 1 | 0 | 1 | 5 |
+| 0 | 1 | 1 | 0 | 6 |
+| 0 | 1 | 1 | 1 | 7 |
+| 1 | 1 | 1 | 0 | 14 |
 
 K-map
 
