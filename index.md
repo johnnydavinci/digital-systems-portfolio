@@ -22,30 +22,50 @@ This portfolio documents four digital systems design projects, including design,
   
   Objectives (from the handout):
   
-  1. Design the circuit the traditional way: truth table, K-map and Boolean simplification, then build it in Multisim. (Part I)
+  1. Design the circuit the traditional way: truth table, K-map and Boolean simplification. (Part I)
   2. Implement the same circuit on the Basys3 FPGA (Artix-7 xc7a35tcpg236-1) through the Vivado flow: design entry, simulation, synthesis,              implementation, bitstream and programming. (Part II)
   3. Challenge: extend the design so a 2-bit STATUS output tells apart a door warning and a seat-belt warning. (Part III)
   
   
   **Design: Explanation of design and labelled block diagram**
 
+Truth Table
+
+D	K	P	S	Minterm
+0	1	0	0	4
+0	1	0	1	5
+0	1	1	0	6
+0	1	1	1	7
+1	1	1	0	14
+
+K-map
+
+        PS: 00  01  11  10
+DK=00        0   0   0   0
+DK=01        1   1   1   1  
+DK=11        0   0   0   1   
+DK=10        0   0   0   0
+
+Boolean Sumplification
+
+L = D’K + KPS’ = K(D’ + PS’)
   
   **Code: Dexplanation of code blocks or sections (key parts), Link to the design source, testbench and relevant XDC**
 
   
   **Simulation: Waveforms for all required scenarios and analysis of expected vs. observed results**
 
-  
-  <img width="975" height="270" alt="image" src="https://github.com/user-attachments/assets/cdd4d2db-ac1b-435b-91f9-7e99d0630775" />
 Elaborated Design 
-  <img width="975" height="383" alt="image" src="https://github.com/user-attachments/assets/b2333f11-ed63-4c3c-b1d4-46d9beab52c9" />
+  <img width="975" height="270" alt="image" src="https://github.com/user-attachments/assets/cdd4d2db-ac1b-435b-91f9-7e99d0630775" />
 Simulation Waveform
-  <img width="975" height="459" alt="image" src="https://github.com/user-attachments/assets/9ecd0e24-f69f-48cd-a855-a1f83630035e" />
+  <img width="975" height="383" alt="image" src="https://github.com/user-attachments/assets/b2333f11-ed63-4c3c-b1d4-46d9beab52c9" />
 Synthesized Design
-  <img width="975" height="486" alt="image" src="https://github.com/user-attachments/assets/c2ad4230-cf33-4320-b67a-cdadadb707a5" />
+  <img width="975" height="459" alt="image" src="https://github.com/user-attachments/assets/9ecd0e24-f69f-48cd-a855-a1f83630035e" />
 Implemented Design
-  <img width="758" height="181" alt="image" src="https://github.com/user-attachments/assets/103d03f8-584f-48cf-aad6-ceec00071bc5" />
+  <img width="975" height="486" alt="image" src="https://github.com/user-attachments/assets/c2ad4230-cf33-4320-b67a-cdadadb707a5" />
 Utilization report
+  <img width="758" height="181" alt="image" src="https://github.com/user-attachments/assets/103d03f8-584f-48cf-aad6-ceec00071bc5" />
+
 
 
   Hardware: Elaborated and synthesized schematics, implementation, utilization and Basys3 behaviour
