@@ -1,4 +1,4 @@
-# Digital Systems Design Portfolio
+<h1 align="center">Digital Systems Design Portfolio</h1>
 
 **Name:** Quang Nguyen 
 **Course/Section:** Adv Digital & Embedded Systems - ELIC-329-0NA
