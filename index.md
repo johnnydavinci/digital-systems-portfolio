@@ -11,7 +11,7 @@ This portfolio documents four digital systems design projects, including design,
    
   **Introduction: idea and objectives**
   
-  Idea: A digital control circuit that turns on a car’s seat-belt warning light (L) based on four sensor inputs. A sensor sets its output to 1 when its condition is true; for example, the pressure sensor outputs 1 when someone is in the seat.
+  Idea: A digital control circuit that turns on a car’s seat-belt warning light (L) based on four sensor inputs. A sensor sets its output to 1 when     its condition is true; for example, the pressure sensor outputs 1 when someone is in the seat.
   
   Input	= 1 when…	Basys3 switch / pin
   D (door_closed)	door is closed	SW0 / V17
@@ -22,14 +22,32 @@ This portfolio documents four digital systems design projects, including design,
   
   Objectives (from the handout):
   
-  Design the circuit the traditional way: truth table, K-map and Boolean simplification, then build it in Multisim. (Part I)
-  Implement the same circuit on the Basys3 FPGA (Artix-7 xc7a35tcpg236-1) through the Vivado flow: design entry, simulation, synthesis, implementation, bitstream and programming. (Part II)
-  Challenge: extend the design so a 2-bit STATUS output tells apart a door warning and a seat-belt warning. (Part III)
+  1. Design the circuit the traditional way: truth table, K-map and Boolean simplification, then build it in Multisim. (Part I)
+  2. Implement the same circuit on the Basys3 FPGA (Artix-7 xc7a35tcpg236-1) through the Vivado flow: design entry, simulation, synthesis,              implementation, bitstream and programming. (Part II)
+  3. Challenge: extend the design so a 2-bit STATUS output tells apart a door warning and a seat-belt warning. (Part III)
   
   
-  Design: Explanation of design and labelled block diagram
-  Code: Dexplanation of code blocks or sections (key parts), Link to the design source, testbench and relevant XDC
-  Simulation: Waveforms for all required scenarios and analysis of expected vs. observed results
+  **Design: Explanation of design and labelled block diagram**
+
+  
+  **Code: Dexplanation of code blocks or sections (key parts), Link to the design source, testbench and relevant XDC**
+
+  
+  **Simulation: Waveforms for all required scenarios and analysis of expected vs. observed results**
+
+  
+  <img width="975" height="270" alt="image" src="https://github.com/user-attachments/assets/cdd4d2db-ac1b-435b-91f9-7e99d0630775" />
+Elaborated Design 
+  <img width="975" height="383" alt="image" src="https://github.com/user-attachments/assets/b2333f11-ed63-4c3c-b1d4-46d9beab52c9" />
+Simulation Waveform
+  <img width="975" height="459" alt="image" src="https://github.com/user-attachments/assets/9ecd0e24-f69f-48cd-a855-a1f83630035e" />
+Synthesized Design
+  <img width="975" height="486" alt="image" src="https://github.com/user-attachments/assets/c2ad4230-cf33-4320-b67a-cdadadb707a5" />
+Implemented Design
+  <img width="758" height="181" alt="image" src="https://github.com/user-attachments/assets/103d03f8-584f-48cf-aad6-ceec00071bc5" />
+Utilization report
+
+
   Hardware: Elaborated and synthesized schematics, implementation, utilization and Basys3 behaviour
   Reflection: Challenges/resolutions and learning linked to theory
 
