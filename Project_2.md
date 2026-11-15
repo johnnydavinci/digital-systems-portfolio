@@ -1,4 +1,9 @@
+<h1 align="center">💻 Project Reports 💻
+<br>
 <h1 align="center"> Project 2 🔢 Event Counter</h1>
+
+<img width="2752" height="1536" alt="Gemini_Generated_Image_o4hitro4hitro4hi" src="https://github.com/user-attachments/assets/545356cb-f6b7-4f23-8bb1-227d5376ebad" />
+
 
 ## Introduction
 
