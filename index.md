@@ -12,7 +12,7 @@ This portfolio documents four digital systems design projects, including design,
 1. [Project 1 – Car Seat Belt Warning Light](Project_1.md)
 
 
-2. [Project 2 — Event Counter](projects/Project_2.md)
+2. [Project 2 — Event Counter](Project_2.md)
 
 
 4. [Project 3 — Add title](projects/project3.html)
