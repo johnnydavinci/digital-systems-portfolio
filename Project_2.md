@@ -1,19 +1,21 @@
-<h3 align="center">🔢 Project 2 – Event Counter</h3>
+<h1 align="center"> Project 2 🔢 Event Counter</h1>
 
-#### Introduction
+## Introduction
 
-**Idea:** A counter whose value is shown on the Basys3 seven-segment display and LEDs. It is built in two parts:
+**Idea** 
+
+A counter whose value is shown on the Basys3 seven-segment display and LEDs. It is built in two parts:
 
 - **Part I – Counter with display:** The counter increases automatically once every second (1 Hz) and counts 0 to F in hex.
 - **Part II – Button event counter:** The counter increases once each time a push button is pressed, and a second button resets it to 0.
 
-**Objectives** (from the handout):
+**Objectives** 
 
 1. Design and implement sequential circuits in VHDL, including modulo-M counters and button event counters.
 2. Use a configurable frequency divider with VHDL `generic` and `generic map`.
 3. Implement and test the counter on the Basys3 FPGA using push buttons and the 7-segment display.
 
-#### Design
+## Design
 
 **Block Diagram**
 
