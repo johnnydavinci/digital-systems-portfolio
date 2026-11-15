@@ -1,6 +1,6 @@
 <h1 align="center">💻 Project Reports 💻
 <br>
- Project 1 🚗 Car Seat Belt Warning Light<br></h1>
+<h1 align="center"> Project 1 🚗 Car Seat Belt Warning Light<br></h1>
 
 <img width="2752" height="1536" alt="AdobeExpressPhotos_28d75d22bb47427495b3e996df47e723_CopyEdited" src="https://github.com/user-attachments/assets/8af50113-0cbe-40cd-8e9f-631bd5e652f9" />
 
