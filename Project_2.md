@@ -116,77 +116,89 @@ begin
 end Structural;
 ````
 
+*Top-level structural design.* It does not describe any logic itself; it connects the three modules:
+- `debouncer_inst` cleans the `btn_count` press and outputs `debounced_btn`.
+- `counter_inst` uses `debounced_btn` as its clock, so it counts once per press. `btn_reset` clears it.
+- `decoder_inst` turns the 4-bit count into the 7-segment pattern and sets `anode`.
+- `leds <= count_sig` also shows the count in binary on LD0–LD3.
+
 
 **button_debounce.vhd**
 ````
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity Count_display is
-    Port ( clock     : in STD_LOGIC;
-           btn_count : in STD_LOGIC;
-           btn_reset : in STD_LOGIC;
-           leds      : out STD_LOGIC_VECTOR (3 downto 0);
-           sevenseg  : out STD_LOGIC_VECTOR (6 downto 0);
-           anode     : out STD_LOGIC_VECTOR (3 downto 0));
-end Count_display;
+entity button_debounce is
+    generic (
+        STABLE_CYCLES : positive := 2000000
+    );
+    port (
+        clk_in : in  STD_LOGIC;
+        reset  : in  STD_LOGIC;
+        btn_in : in  STD_LOGIC;
+        btn_db : out STD_LOGIC
+    );
+end button_debounce;
 
-architecture Structural of Count_display is
-    component button_debounce
-        Port ( clk_in : in STD_LOGIC;
-               reset  : in STD_LOGIC;   -- Added reset port to match debouncer file
-               btn_in : in STD_LOGIC;
-               btn_db : out STD_LOGIC);
-    end component;
+architecture Behavioral of button_debounce is
 
-    component modMcounter
-        generic ( N : integer := 4 );
-        port ( clk   : in STD_LOGIC;
-               reset : in STD_LOGIC;
-               count : out STD_LOGIC_VECTOR(N-1 downto 0));
-    end component;
+    signal btn1, btn2 : STD_LOGIC := '0';
+    signal btn_stable : STD_LOGIC := '0';
 
-    component Hex_7seg
-        port ( hexdigit : in STD_LOGIC_VECTOR(3 downto 0);
-               seg      : out STD_LOGIC_VECTOR(6 downto 0);
-               anode    : out STD_LOGIC_VECTOR(3 downto 0));
-    end component;
+    signal count : integer range 0 to STABLE_CYCLES := 0;
 
-    signal debounced_btn : STD_LOGIC;
-    signal count_sig     : STD_LOGIC_VECTOR(3 downto 0);
 begin
 
-    -- Debounce the physical push button
-    debouncer_inst: button_debounce
-        port map(
-            clk_in => clock,
-            reset  => btn_reset,      -- Connected to the top-level reset button
-            btn_in => btn_count,
-            btn_db => debounced_btn
-        );
+    process(clk_in, reset)
+    begin
 
-    -- Counter triggered by the debounced button press
-    counter_inst: modMcounter
-        generic map ( N => 4 )
-        port map(
-            clk => debounced_btn,
-            reset => btn_reset,
-            count => count_sig
-        );
+        if reset = '1' then
+            btn1 <= '0';
+            btn2 <= '0';
+            btn_stable <= '0';
+            count <= 0;
 
-    -- Decode the counter output for the 7-segment display
-    decoder_inst: Hex_7seg
-        port map(
-            hexdigit => count_sig,
-            seg => sevenseg,
-            anode => anode
-        );
+        elsif rising_edge(clk_in) then
 
-    -- Wire the 4-bit count to the discrete LEDs
-    leds <= count_sig;
+            -- Read button input into internal signals
+            btn1 <= btn_in;
+            btn2 <= btn1;
 
-end Structural;
+            -- If the button matches the accepted state,
+            -- there is no new press or release to check.
+            if btn2 = btn_stable then
+                count <= 0;
+
+            else
+                -- The button has changed, count how long it stays at the new value.
+                if count < STABLE_CYCLES - 1 then
+                    count <= count + 1;
+
+                else
+                    -- The new value has remained stable for enough cycles
+                    btn_stable <= btn2;
+                    count <= 0;
+
+                end if;
+            end if;
+
+        end if;
+    end process;
+
+    -- Send the clean button signal to the counter.
+    btn_db <= btn_stable;
+
+end Behavioral;
 ````
+
+
+*Removes mechanical bounce from the push button.*
+- **Synchronizer (`btn1`, `btn2`):** The button signal passes through two flip-flops so it lines up safely with the 100 MHz clock.
+- **Stability counter:** When the button differs from the accepted state (`btn_stable`), `count` increases every clock cycle. If the button bounces back, the count resets to 0.
+- **Accept new value:** Only after the button stays the same for `STABLE_CYCLES` cycles does `btn_stable` change. With `STABLE_CYCLES = 2_000_000` this is 20 ms.
+- **Generic:** `STABLE_CYCLES` can be changed without editing the logic. It was set to 10 (100 ns) for simulation so the testbench runs quickly, and to 2,000,000 (20 ms) for the Basys3 board.
+- **Reset:** Asynchronous, like the counter. It clears all internal signals immediately.
 
 
 **modMcounter.vhd**
@@ -219,6 +231,11 @@ begin
     count <= std_logic_vector(count_sig);
 end Behavioral;
 ````
+
+*Generic N-bit up-counter (N = 4 here, so 0 to F).*
+- `reset = '1'` clears the count immediately. This is an **asynchronous reset**: it is checked before the clock edge.
+- On each `rising_edge(clk)` the count increases by 1. After `1111` it wraps back to `0000` automatically.
+- The count is stored as `unsigned` so `+ 1` works, then converted to `std_logic_vector` for the output.
 
 
 **Hex_7seg.vhd**
@@ -263,6 +280,11 @@ begin
     end process;
 end Behavioral;
 ````
+
+*Hex-to-7-segment decoder.*
+- A `case…when` statement maps each 4-bit value (0–F) to a 7-bit `gfedcba` pattern.
+- The display is **active-low**: `0` = segment ON. For example, `"1000000"` lights every segment except g, showing **0**.
+- `anode <= "1110"` turns on only the rightmost digit.
 
 
 **Contranst**
@@ -318,6 +340,7 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 set_property CFGBVS VCCO [current_design]
 ````
 
+*Maps every port to a Basys3 pin:* the clock to W5 (100 MHz, 10 ns period), `btn_count` to the centre button (U18), `btn_reset` to the up button (T18), `leds[3:0]` to LD0–LD3, `sevenseg[6:0]` to segments a–g and `anode[3:0]` to the four digit-select pins. All pins use LVCMOS33 (3.3 V).
 
 ## Simulation
 
@@ -412,20 +435,76 @@ END behavior;
 
 ````
 
+
+*The testbench generates a 100 MHz clock and tests four cases:*
+1. Reset at the start.
+2. 18 short presses: the count goes 0 → F, wraps to 0, then reaches 2.
+3. One long hold: the count increases only once (2 → 3).
+4. Reset in the middle, then two more presses: 0 → 1 → 2.
+
+The debounce time was shortened only for simulation, so 2 µs presses are accepted.
+
+
 <img width="1060" height="466" alt="image" src="https://github.com/user-attachments/assets/2c800eb0-4820-4bc4-903a-e8c788d7d7a6" />
 
 
-## Hardware : Elaborated and synthesized schematics, implementation, utilization and Basys3 behaviour
+*Result:* `leds` counts 1, 2 … F, wraps to 0, then 1, 2. The long press gives only one count (3). Reset returns it to 0, and counting resumes (1, 2). `sevenseg` changes with the count; for example `79` is the pattern for "1" and `07` is "F". `anode` stays at `e` (`1110`), so only the rightmost digit is used. All results match the expected behaviour.
 
 
-**Elaborated Design**
+## Hardware
+
+
+**Elaborated Design**\
 <img width="1207" height="392" alt="image" src="https://github.com/user-attachments/assets/2f450fa9-7ab5-4f21-9edb-20257f6cff11" />
 
 
-**Synthesized Design**
+*Shows the structure from the VHDL:* the three blocks `debouncer_inst`, `counter_inst` and `decoder_inst` are wired exactly as in the block diagram. `btn_reset` goes to both the debouncer and the counter, and the debounced output (`btn_db`) feeds the counter's `clk`. `anode` is a constant `"1110"` sent through an output buffer.
+
+
+**Synthesized Design**\
 <img width="1420" height="944" alt="image" src="https://github.com/user-attachments/assets/d461b1c3-68c8-41da-a484-ce64946dc72a" />
 
 
+*Shows the design mapped to FPGA resources:* input buffers (IBUF) for the buttons and clock, a global clock buffer (BUFG) for the 100 MHz clock, the three modules in the middle, and output buffers (OBUF) for all 15 output pins (4 LEDs, 7 segments, 4 anodes).
 
 
-Reflection: Challenges/resolutions and learning linked to theory
+**Implemented Design**\
+<img width="268" height="425" alt="image" src="https://github.com/user-attachments/assets/2ea391bd-3333-481d-994c-364e53c81835" />
+
+
+*Shows where the logic was placed on the Artix-7 chip.* Only a few small highlighted areas are used, near the I/O edges where the switches, buttons and display pins connect. The rest of the chip is empty.
+
+
+**Utilization report**\
+<img width="794" height="211" alt="image" src="https://github.com/user-attachments/assets/8c9893b3-0f1b-49b2-9624-4641450a765b" />
+
+
+| Resource | Used | Available |
+|---|---|---|
+| Slice LUTs | 11 | 20,800 |
+| Slice Registers (flip-flops) | 11 | 41,600 |
+| Bonded IOB | 18 | 106 |
+| BUFGCTRL (clock buffer) | 1 | 32 |
+
+Unlike Project 1, this design uses **registers**, because counters and the debouncer are sequential and must remember their state. The 4-bit counter uses 4 registers, the debouncer 7, and the decoder 0 (it is purely combinational). The 18 IOBs are 1 clock + 2 buttons + 4 LEDs + 7 segments + 4 anodes.
+
+
+**Basys3 behaviour**
+
+
+After programming, pressing the centre button increased the digit on the rightmost display by one each time (0 → F, then back to 0), and LD0–LD3 showed the same value in binary. Holding the button counted only once. Pressing the up button reset the display to 0.
+
+## Reflection
+
+**Challenges and resolutions**
+- **Simulation didn't count:** The debouncer waits about 20 ms (2,000,000 clock cycles), so a few microseconds of simulation showed no change. I shortened the debounce constant for simulation only, then set it back for the hardware.
+- **Port mismatch:** The component declaration in the top level had to match the debouncer's real ports, including `reset`. Otherwise elaboration failed.
+- **Reading the display values:** The 7-segment display is active-low, so the bit patterns look "inverted" (`1000000` = 0). Checking them against the truth table helped confirm the decoder.
+
+**Learning linked to theory**
+- **Sequential vs. combinational logic:** The counter and debouncer use flip-flops to remember their state, while the decoder is purely combinational. The utilization report confirms this: the decoder uses 0 registers.
+- **Asynchronous reset:** The reset is checked before `rising_edge(clk)`, so it works immediately without waiting for a clock edge.
+- **Switch bounce:** A mechanical button creates many fast on/off transitions. Without debouncing, one press could count several times.
+- **Structural VHDL and generics:** The top level reuses modules as components, and `generic map (N => 4)` sets the counter size without changing its code.
+
+- **Debounce time:** Using `STABLE_CYCLES = 10` made simulation fast, but it is only 100 ns, far too short for a real button. It had to be set to 2,000,000 (20 ms) for the board.
