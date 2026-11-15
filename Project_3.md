@@ -5,7 +5,7 @@
 
 **Idea:** A controller that drives a 4-coil stepper motor from the Basys3 FPGA. A **finite state machine (FSM)** produces the coil sequence, one step per clock pulse. Two inputs control it: **En** (enable) starts or stops the motor, and **Dir** sets the direction (clockwise or counter-clockwise). The FPGA output goes through Pmod port JA to a **ULN2003 driver**, which supplies the current the motor coils need.
 
-**Objectives** (from the handout):
+**Objectives**
 
 1. Design a controller for a stepper motor with direction control.
 2. Apply the finite state machine (FSM) technique to generate the step pulses.
@@ -17,7 +17,7 @@
 
 **Block Diagram**
 
-Clk (100 MHz) → `clk_div` (500 Hz) → `stepper_motor_FSM` → q[3:0] → Pmod JA → ULN2003 driver → Stepper motor
+Clk (100 MHz) → clk_div (500 Hz) → stepper_motor_FSM → q[3:0] → Pmod JA → ULN2003 driver → Stepper motor
 (En, Dir and Reset also connect to the FSM)
 
 **Drive mode: wave drive.** Only one coil is energized at a time, and the four coils switch on one by one. It gives low torque but is simple, so it's good for learning.
@@ -332,7 +332,9 @@ END behavior;
 2. **Counter-clockwise** (`en = 1, dir = 0`) for 4 clock cycles.
 3. **Disable** (`en = 0`): the FSM returns to S0 and all coils turn off.
 
-<!-- ADD FSM WAVEFORM IMAGE HERE -->
+
+<img width="1063" height="486" alt="image" src="https://github.com/user-attachments/assets/dc0b529e-08fa-4235-9605-c5a1d76857a8" />
+
 
 | Clock edge | en | dir | state | q |
 |---|---|---|---|---|
@@ -412,30 +414,27 @@ END behavior;
 
 ## Hardware
 
-**Elaborated Design**\
-<!-- ADD ELABORATED DESIGN IMAGE HERE -->
+**Elaborated Design**
+<img width="1114" height="349" alt="image" src="https://github.com/user-attachments/assets/9f0d8cab-cfa1-4f2c-be8c-a1d4e27a0708" />
+
 
 *Shows the structure from the VHDL:* `clk_divider_inst` takes `Clk` and `Reset` and outputs `slow_clk`, which feeds the clock input of `fsm_inst`. `En` and `Dir` go straight to the FSM, and the FSM drives `q[3:0]`.
 
-**Synthesized Design**\
-<!-- ADD SYNTHESIZED DESIGN IMAGE HERE -->
+**Synthesized Design** 
+<img width="1189" height="363" alt="image" src="https://github.com/user-attachments/assets/9df64ef6-5e53-4b79-939f-65fcda48cdbc" />
+
 
 *Shows the design mapped to FPGA resources:* input buffers (IBUF) for the switches, a global clock buffer (BUFG) for the 100 MHz clock, the clock divider and FSM in the middle (flip-flops and LUTs), and 4 output buffers (OBUF) for `q[3:0]` going to Pmod JA.
 
-**Implemented Design**\
-<!-- ADD IMPLEMENTED DESIGN IMAGE HERE -->
+**Implemented Design** \
+<img width="303" height="450" alt="image" src="https://github.com/user-attachments/assets/c8bed5be-f0e4-4d28-a0b8-bc4c0a6f568c" />
+
 
 *Shows where the logic was placed on the Artix-7 chip.* Only a small area is used, close to the I/O pins for the switches and Pmod JA. The rest of the chip is empty.
 
-**Utilization report**\
-<!-- ADD UTILIZATION REPORT IMAGE HERE -->
+**Utilization report** \
+<img width="791" height="200" alt="image" src="https://github.com/user-attachments/assets/cc2e9991-03a6-4be2-9aba-10a32373b9e3" />
 
-| Resource | Used | Available |
-|---|---|---|
-| Slice LUTs | ? | 20,800 |
-| Slice Registers (flip-flops) | ? | 41,600 |
-| Bonded IOB | 8 | 106 |
-| BUFGCTRL (clock buffer) | ? | 32 |
 
 Most of the registers come from the clock divider, whose counter must reach 100,000 (17 bits), plus `temp_clk`. The FSM needs only a few flip-flops to store its 5 states. The 8 IOBs are 1 clock + 3 switches (En, Dir, Reset) + 4 outputs (`q`).
 
