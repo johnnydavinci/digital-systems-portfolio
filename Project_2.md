@@ -497,14 +497,12 @@ After programming, pressing the centre button increased the digit on the rightmo
 ## Reflection
 
 **Challenges and resolutions**
-- **Simulation didn't count:** The debouncer waits about 20 ms (2,000,000 clock cycles), so a few microseconds of simulation showed no change. I shortened the debounce constant for simulation only, then set it back for the hardware.
+- **Simulation didn't count:** The debouncer needs the button to stay stable for 20 ms (2,000,000 clock cycles), so a few microseconds of simulation showed no change. I set `STABLE_CYCLES` to 10 (100 ns) for simulation only, then changed it back to 2,000,000 for the Basys3, because 100 ns is far too short for a real button.
 - **Port mismatch:** The component declaration in the top level had to match the debouncer's real ports, including `reset`. Otherwise elaboration failed.
-- **Reading the display values:** The 7-segment display is active-low, so the bit patterns look "inverted" (`1000000` = 0). Checking them against the truth table helped confirm the decoder.
+- **Reading the display values:** The 7-segment display is active-low, so the bit patterns look "inverted" (`1000000` = 0). Checking them against the truth table confirmed the decoder.
 
 **Learning linked to theory**
 - **Sequential vs. combinational logic:** The counter and debouncer use flip-flops to remember their state, while the decoder is purely combinational. The utilization report confirms this: the decoder uses 0 registers.
 - **Asynchronous reset:** The reset is checked before `rising_edge(clk)`, so it works immediately without waiting for a clock edge.
 - **Switch bounce:** A mechanical button creates many fast on/off transitions. Without debouncing, one press could count several times.
-- **Structural VHDL and generics:** The top level reuses modules as components, and `generic map (N => 4)` sets the counter size without changing its code.
-
-- **Debounce time:** Using `STABLE_CYCLES = 10` made simulation fast, but it is only 100 ns, far too short for a real button. It had to be set to 2,000,000 (20 ms) for the board.
+- **Structural VHDL and generics:** The top level reuses modules as components. `generic map (N => 4)` sets the counter size and `STABLE_CYCLES` sets the debounce time, without changing either module's code.
