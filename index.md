@@ -15,7 +15,7 @@ This portfolio documents four digital systems design projects, including design,
 2. [Project 2 — Event Counter](Project_2.md)
 
 
-4. [Project 3 — Add title](projects/project3.html)
+4. [Project 3 — Stepper Mottor](Project_3.html)
 
 
 5. [Project 4 — Add title](projects/project4.html)
